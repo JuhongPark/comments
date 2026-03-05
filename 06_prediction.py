@@ -1,11 +1,13 @@
 import json
 import sqlite3
+import sys
 import ollama
 
 MODEL = "gemma3:270m"
 DB_FILE = "comments.db"
 PROMPT_FILE = "prompt.txt"
-MAX_RETRIES = 3
+MAX_RETRIES = 2
+BATCH_COMMIT_SIZE = 50
 DEFAULT = {"angry": False, "negative": False, "response": False, "spam": False}
 
 def normalize_bool(value):
@@ -23,7 +25,7 @@ def classify_comment(comment_text, prompt_template):
                 model=MODEL,
                 messages=[{"role": "user", "content": prompt}],
                 format="json",
-                options={"temperature": 0.5},
+                options={"temperature": 0.5, "num_predict": 30},
             )
             raw = json.loads(response["message"]["content"])
             return {k: normalize_bool(raw.get(k, False)) for k in DEFAULT}
@@ -33,14 +35,27 @@ def classify_comment(comment_text, prompt_template):
     return dict(DEFAULT)
 
 def main():
+    # --reclassify flag: force reclassification of all comments (use after model change)
+    reclassify = "--reclassify" in sys.argv
+
     with open(PROMPT_FILE, "r", encoding="utf-8") as f:
         prompt_template = f.read()
 
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT cid, text FROM comments ORDER BY rowid")
+    if reclassify:
+        cursor.execute("SELECT cid, text FROM comments ORDER BY rowid")
+        print("Reclassifying all comments (--reclassify flag set)...")
+    else:
+        cursor.execute("SELECT cid, text FROM comments WHERE negative IS NULL OR negative = '' ORDER BY rowid")
+
     rows = cursor.fetchall()
+
+    if not rows:
+        print("All comments already classified. Use --reclassify to force reclassification (e.g. after model change).")
+        conn.close()
+        return
 
     print(f"Classifying {len(rows)} comments...")
 
@@ -57,10 +72,11 @@ def main():
             str(result["response"]),
             cid
         ))
-        conn.commit()
-        if (i + 1) % 10 == 0:
+        if (i + 1) % BATCH_COMMIT_SIZE == 0:
+            conn.commit()
             print(f"  Processed {i + 1}/{len(rows)} comments")
 
+    conn.commit()
     conn.close()
     print(f"Updated {len(rows)} comments in database")
 

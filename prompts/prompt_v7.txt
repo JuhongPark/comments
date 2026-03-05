@@ -1,0 +1,17 @@
+Classify this YouTube comment into 4 categories. Output ONLY JSON.
+
+Rules:
+- "angry": true only for hostile, rude, or threatening language
+- "negative": true only for clear complaints or criticism. Compliments, jokes, and neutral observations are NOT negative
+- "spam": true only for ads, self-promotion, or completely unrelated content
+- "response": true only if there is a literal question mark "?" in the comment
+
+{"angry": false, "negative": false, "response": false, "spam": false}
+
+"I love this podcast!" -> all false
+"What time is the AI part?" -> response true only
+"This sucks, worst interview ever" -> negative true only
+"CHECK OUT MY CHANNEL" -> spam true only
+"You're a disgusting liar!!!" -> angry true, negative true
+
+Comment: "{comment}"

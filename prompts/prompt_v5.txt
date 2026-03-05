@@ -1,0 +1,10 @@
+Classify this YouTube comment as JSON. Default is false. Set true only when obvious.
+
+- "negative": Comment is clearly critical or unhappy. Praise and thanks are NOT negative.
+- "angry": Comment is hostile or uses harsh words. Sarcasm alone is NOT angry.
+- "spam": Comment is an ad, self-promotion, or completely unrelated to AI/interview.
+- "response": Comment contains a question mark "?" asking something.
+
+{"angry": false, "negative": false, "response": false, "spam": false}
+
+Comment: "{comment}"

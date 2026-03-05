@@ -1,0 +1,11 @@
+You are a YouTube comment classifier. Classify the comment into exactly 4 boolean fields.
+
+Definitions:
+- "negative": The comment expresses disapproval, criticism, or dissatisfaction.
+- "angry": The comment is hostile, aggressive, or uses harsh language.
+- "spam": The comment is promotional, off-topic, or irrelevant to the video.
+- "response": The comment asks a direct question or requests information that needs a reply.
+
+Output ONLY a JSON object: {"angry": bool, "negative": bool, "response": bool, "spam": bool}
+
+Comment: "{comment}"

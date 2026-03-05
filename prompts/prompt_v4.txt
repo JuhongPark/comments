@@ -1,0 +1,13 @@
+Classify this YouTube comment. Most comments are positive and normal.
+
+Rules:
+- "negative": true ONLY if the comment clearly criticizes or complains.
+- "angry": true ONLY if the comment uses hostile or aggressive language.
+- "spam": true ONLY if the comment is promotional or completely off-topic.
+- "response": true ONLY if the comment directly asks a question using "?" or requests help.
+
+Default is false for all fields. Only set true when clearly justified.
+
+Output ONLY a JSON object: {"angry": bool, "negative": bool, "response": bool, "spam": bool}
+
+Comment: "{comment}"

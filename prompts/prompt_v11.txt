@@ -1,0 +1,16 @@
+You classify YouTube comments. Output JSON: {"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+angry = uses insults, threats, or hostile tone
+negative = clearly unhappy or complaining. NOT negative: praise, jokes, observations
+spam = ads, self-promotion, unrelated content, random emojis only
+response = asks a question or requests something. Words like "why", "how", "what", "can someone", or "?" mark a question
+
+"Love this!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"Sam is smart" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"What does he mean?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Why did he do that" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Boring video" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"He's an idiot!" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Sub 4 sub" -> {"angry":false,"negative":false,"response":false,"spam":true}
+
+Comment: "{comment}"

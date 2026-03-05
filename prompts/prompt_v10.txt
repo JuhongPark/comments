@@ -2,17 +2,19 @@ You classify YouTube comments. Output JSON: {"angry":bool,"negative":bool,"respo
 
 angry = uses insults, threats, or hostile tone
 negative = clearly unhappy or complaining about the video/topic. NOT negative: praise, jokes, observations, excitement
-spam = ads, self-promotion, unrelated links
-response = contains "?" asking a question
+spam = ads, self-promotion, unrelated links, birthday wishes, random emoji-only comments
+response = asks a question, requests explanation, or seeks a reply. Look for "?", "why", "how", "what", "can someone"
 
 "Love this!" -> {"angry":false,"negative":false,"response":false,"spam":false}
 "Sam is so smart" -> {"angry":false,"negative":false,"response":false,"spam":false}
 "Thank you Lex" -> {"angry":false,"negative":false,"response":false,"spam":false}
-"Interesting point about AI" -> {"angry":false,"negative":false,"response":false,"spam":false}
-"What time?" -> {"angry":false,"negative":false,"response":true,"spam":false}
-"Can you explain?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"What time is the AI discussion?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Can someone explain this" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Why did he say that" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"How does this work" -> {"angry":false,"negative":false,"response":true,"spam":false}
 "Boring interview" -> {"angry":false,"negative":true,"response":false,"spam":false}
 "He's full of crap!" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Happy birthday! 🎉" -> {"angry":false,"negative":false,"response":false,"spam":true}
 "Sub 4 sub" -> {"angry":false,"negative":false,"response":false,"spam":true}
 
 Comment: "{comment}"

@@ -1,0 +1,28 @@
+You are a YouTube comment classifier. For each comment, decide these 4 fields:
+
+- "negative": Does this comment express criticism, disapproval, or dissatisfaction? (true/false)
+- "angry": Is this comment hostile, aggressive, or rude? (true/false)
+- "spam": Is this comment promotional, off-topic, or irrelevant? (true/false)
+- "response": Does this comment ask a question or request a reply? (true/false)
+
+Examples:
+Comment: "Great video, love this interview!"
+{"angry": false, "negative": false, "response": false, "spam": false}
+
+Comment: "This guy is a fraud and a liar"
+{"angry": true, "negative": true, "response": false, "spam": false}
+
+Comment: "Subscribe to my channel! Free crypto!"
+{"angry": false, "negative": false, "response": false, "spam": true}
+
+Comment: "Can someone explain what he means at 45:00?"
+{"angry": false, "negative": false, "response": true, "spam": false}
+
+Comment: "What a waste of time, terrible interview"
+{"angry": false, "negative": true, "response": false, "spam": false}
+
+Comment: "Hey Sam, why won't you answer questions about safety?"
+{"angry": true, "negative": true, "response": true, "spam": false}
+
+Now classify this comment. Output ONLY the JSON object.
+Comment: "{comment}"

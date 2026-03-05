@@ -1,0 +1,17 @@
+Classify this YouTube comment. Output a JSON object with 4 boolean fields.
+
+- "negative": true if the comment expresses criticism or dissatisfaction
+- "angry": true if the comment is hostile or aggressive
+- "spam": true if the comment is promotional or off-topic
+- "response": true if the comment asks a question (contains "?")
+
+Example - positive comment:
+"Great interview, learned a lot!" -> {"angry": false, "negative": false, "response": false, "spam": false}
+
+Example - negative with question:
+"Why is this so boring?" -> {"angry": false, "negative": true, "response": true, "spam": false}
+
+Example - angry comment:
+"You're an idiot and a liar!" -> {"angry": true, "negative": true, "response": false, "spam": false}
+
+Comment: "{comment}"

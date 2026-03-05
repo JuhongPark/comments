@@ -26,7 +26,7 @@ def main():
     except sqlite3.OperationalError:
         pass  # Column already exists
 
-    cursor.execute("SELECT cid, text FROM comments WHERE response = 'True'")
+    cursor.execute("SELECT cid, text FROM comments WHERE LOWER(response) = 'true'")
     rows = cursor.fetchall()
 
     print(f"Generating responses for {len(rows)} comments...")

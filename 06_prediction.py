@@ -26,7 +26,7 @@ def main():
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT cid, text FROM comments LIMIT ?", (BATCH_SIZE,))
+    cursor.execute("SELECT cid, text FROM comments ORDER BY rowid LIMIT ?", (BATCH_SIZE,))
     rows = cursor.fetchall()
 
     print(f"Classifying {len(rows)} comments...")
@@ -44,10 +44,10 @@ def main():
             str(result.get("response", False)),
             cid
         ))
+        conn.commit()
         if (i + 1) % 10 == 0:
             print(f"  Processed {i + 1}/{len(rows)} comments")
 
-    conn.commit()
     conn.close()
     print(f"Updated {len(rows)} comments in database")
 

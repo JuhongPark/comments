@@ -20,6 +20,7 @@ def main():
             author TEXT,
             channel TEXT,
             votes TEXT,
+            replies TEXT,
             photo TEXT,
             heart TEXT,
             reply TEXT,
@@ -34,8 +35,8 @@ def main():
     for comment in comments:
         cursor.execute("""
             INSERT OR IGNORE INTO comments
-            (cid, text, time, author, channel, votes, photo, heart, reply, time_parsed)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (cid, text, time, author, channel, votes, replies, photo, heart, reply, time_parsed)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             str(comment.get("cid", "")),
             str(comment.get("text", "")),
@@ -43,6 +44,7 @@ def main():
             str(comment.get("author", "")),
             str(comment.get("channel", "")),
             str(comment.get("votes", "")),
+            str(comment.get("replies", "")),
             str(comment.get("photo", "")),
             str(comment.get("heart", "")),
             str(comment.get("reply", "")),

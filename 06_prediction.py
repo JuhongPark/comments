@@ -3,7 +3,7 @@ import sqlite3
 import sys
 import ollama
 
-MODEL = "gemma3:270m"
+MODEL = "gemma3:1b"
 DB_FILE = "comments.db"
 PROMPT_FILE = "prompt.txt"
 MAX_RETRIES = 2

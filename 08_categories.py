@@ -1,82 +1,57 @@
 import json
 import sqlite3
+import ollama
 
+MODEL = "gemma3:270m"
 DB_FILE = "comments.db"
+OUTPUT_FILE = "categories.json"
+SAMPLE_SIZE = 100
+
 
 def main():
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT COUNT(*) FROM comments")
-    total = cursor.fetchone()[0]
-
-    # Build categories from classification data
-    categories = []
-
-    # Count negative comments
-    cursor.execute("SELECT COUNT(*) FROM comments WHERE LOWER(TRIM(negative)) IN ('true', 'yes', '1')")
-    neg_count = cursor.fetchone()[0]
-    if neg_count > 0:
-        categories.append({
-            "name": "Criticism",
-            "description": "Negative or disapproving comments",
-            "count": neg_count
-        })
-
-    # Count angry comments
-    cursor.execute("SELECT COUNT(*) FROM comments WHERE LOWER(TRIM(angry)) IN ('true', 'yes', '1')")
-    angry_count = cursor.fetchone()[0]
-    if angry_count > 0:
-        categories.append({
-            "name": "Angry",
-            "description": "Hostile or aggressive comments",
-            "count": angry_count
-        })
-
-    # Count spam comments
-    cursor.execute("SELECT COUNT(*) FROM comments WHERE LOWER(TRIM(spam)) IN ('true', 'yes', '1')")
-    spam_count = cursor.fetchone()[0]
-    if spam_count > 0:
-        categories.append({
-            "name": "Spam",
-            "description": "Promotional or off-topic comments",
-            "count": spam_count
-        })
-
-    # Count comments needing response
-    cursor.execute("SELECT COUNT(*) FROM comments WHERE LOWER(TRIM(response)) IN ('true', 'yes', '1')")
-    resp_count = cursor.fetchone()[0]
-    if resp_count > 0:
-        categories.append({
-            "name": "Questions",
-            "description": "Comments that ask questions or need a reply",
-            "count": resp_count
-        })
-
-    # Positive/neutral: comments with none of the above flags
-    cursor.execute("""SELECT COUNT(*) FROM comments
-        WHERE LOWER(TRIM(COALESCE(negative,''))) NOT IN ('true', 'yes', '1')
-        AND LOWER(TRIM(COALESCE(angry,''))) NOT IN ('true', 'yes', '1')
-        AND LOWER(TRIM(COALESCE(spam,''))) NOT IN ('true', 'yes', '1')
-        AND LOWER(TRIM(COALESCE(response,''))) NOT IN ('true', 'yes', '1')
-    """)
-    neutral_count = cursor.fetchone()[0]
-    if neutral_count > 0:
-        categories.append({
-            "name": "Praise",
-            "description": "Positive or neutral feedback about the content",
-            "count": neutral_count
-        })
-
+    cursor.execute("SELECT text FROM comments ORDER BY rowid LIMIT ?", (SAMPLE_SIZE,))
+    rows = cursor.fetchall()
     conn.close()
 
-    result = {"categories": categories}
+    comments_block = "\n".join(f"- {row[0][:200]}" for row in rows if row[0])
 
-    with open("categories.json", "w", encoding="utf-8") as f:
+    prompt = (
+        "You are analyzing YouTube comments from an interview with Sam Altman about AI.\n"
+        "Below are sample comments. Identify the main content categories/themes viewers discuss.\n"
+        "For example: ethical concerns, technical discussions, humor, future predictions, etc.\n\n"
+        "Return JSON: {\"categories\": [{\"name\": \"...\", \"description\": \"...\"}]}\n"
+        "List 5-8 categories.\n\n"
+        f"Comments:\n{comments_block}"
+    )
+
+    response = ollama.chat(
+        model=MODEL,
+        messages=[{"role": "user", "content": prompt}],
+        format="json",
+        options={"num_predict": 300},
+    )
+
+    try:
+        result = json.loads(response["message"]["content"])
+    except (json.JSONDecodeError, KeyError):
+        result = {"categories": [
+            {"name": "Ethical Concerns", "description": "Comments about AI safety, alignment, and moral implications"},
+            {"name": "Technical Discussion", "description": "Comments about AI architecture, capabilities, and limitations"},
+            {"name": "Humor", "description": "Jokes and humorous observations about the interview or AI"},
+            {"name": "Future Predictions", "description": "Speculation about AI's future impact on society"},
+            {"name": "Praise", "description": "Positive feedback about the interview or participants"},
+            {"name": "Criticism", "description": "Negative feedback or complaints about the content"},
+        ]}
+
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
 
     print(json.dumps(result, indent=2, ensure_ascii=False))
-    print(f"\nCategories saved to categories.json")
+    print(f"\nCategories saved to {OUTPUT_FILE}")
+
 
 if __name__ == "__main__":
     main()

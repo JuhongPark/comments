@@ -1,7 +1,7 @@
 import sqlite3
 import ollama
 
-MODEL = "gemma3:1b"
+MODEL = "gemma3:270m"
 DB_FILE = "comments.db"
 
 def generate_response(comment_text):

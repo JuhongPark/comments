@@ -1,0 +1,6 @@
+youtube-comment-downloader
+ollama
+scikit-learn
+matplotlib
+numpy
+sentence-transformers

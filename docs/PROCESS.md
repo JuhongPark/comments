@@ -30,9 +30,15 @@ Plan → Evaluate Plan → Implement → Evaluate Implementation → Test → Sp
 - Document any issues or deviations found
 
 #### Phase 5: Test
-- Run the implemented script and verify it executes without errors
-- Validate output files are generated with correct names and formats
-- Confirm data integrity (e.g., JSON structure, DB schema, column names)
+- **Default: Smoke test** (lightweight, fast)
+  - Verify already-executed outputs (file existence, size, structure)
+  - For LLM-dependent tasks, test with 2-3 items only to validate logic
+  - Check data integrity (JSON structure, DB schema, column names)
+  - Do NOT re-run full pipelines or process all data
+- **Full test**: Only when explicitly requested by the user
+  - Run all scripts end-to-end with full dataset
+  - Validate complete outputs and edge cases
+  - User will provide specific instructions for full test scope
 
 #### Phase 6: Spec Validation
 - Cross-check every requirement in `PROJECT_SPEC.md` for the target task

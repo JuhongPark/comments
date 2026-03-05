@@ -6,6 +6,7 @@
 ## Commit Convention
 - Commit message format: `<type>: <description>`
 - Type examples: `docs`, `feat`, `fix`, `refactor`, `chore`, `style`, `test`
+- Do not include internal process terms (e.g., "cycle") in commit messages
 
 ## Reference Document
 - `docs/PROJECT_SPEC.md` is the single source of truth for the project

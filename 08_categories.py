@@ -35,7 +35,11 @@ def main():
     except json.JSONDecodeError:
         result = {"categories": [], "raw": response["message"]["content"]}
 
+    with open("categories.json", "w", encoding="utf-8") as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
+
     print(json.dumps(result, indent=2, ensure_ascii=False))
+    print(f"\nCategories saved to categories.json")
 
 if __name__ == "__main__":
     main()

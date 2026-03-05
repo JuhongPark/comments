@@ -19,24 +19,33 @@ def run_step(name, script):
     print(f"Step: {name} ({script})")
     print(f"{'='*60}")
     try:
-        result = subprocess.run(
+        subprocess.run(
             [sys.executable, script],
             check=True,
             capture_output=False,
         )
         print(f"[SUCCESS] {name}")
+        return True
     except subprocess.CalledProcessError as e:
         print(f"[FAILED] {name} - Exit code: {e.returncode}")
-        raise
+        return False
 
 def main():
     print("Starting data pipeline...")
 
+    failed_steps = []
     for name, script in PIPELINE_STEPS:
-        run_step(name, script)
+        success = run_step(name, script)
+        if not success:
+            failed_steps.append(name)
 
     print(f"\n{'='*60}")
-    print("Pipeline completed successfully!")
+    if failed_steps:
+        print(f"Pipeline completed with {len(failed_steps)} error(s):")
+        for step in failed_steps:
+            print(f"  - {step}")
+    else:
+        print("Pipeline completed successfully!")
     print(f"{'='*60}")
 
 if __name__ == "__main__":

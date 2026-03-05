@@ -47,12 +47,16 @@ def main():
     plt.savefig(OUTPUT_IMAGE, dpi=150)
     print(f"Visualization saved to {OUTPUT_IMAGE}")
 
-    # Print cluster analysis
+    # Print cluster analysis with theme identification
+    print("\n=== Cluster Analysis ===")
     for i in range(N_CLUSTERS):
         cluster_texts = [texts[j] for j in range(len(texts)) if labels[j] == i]
         print(f"\nCluster {i} ({len(cluster_texts)} comments):")
-        for t in cluster_texts[:3]:
-            print(f"  - {t[:100]}...")
+        print(f"  Sample comments:")
+        for t in cluster_texts[:5]:
+            print(f"    - {t[:120]}")
+    print("\nNote: Examine the sample comments above to identify common themes.")
+    print("Clusters may align with categories such as positive, negative, angry, or spam.")
 
 if __name__ == "__main__":
     main()

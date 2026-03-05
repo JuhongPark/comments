@@ -21,7 +21,6 @@ def main():
         "author": {"type": "string", "description": "Comment author name"},
         "channel": {"type": "string", "description": "Author YouTube channel ID"},
         "votes": {"type": "string", "description": "Number of likes"},
-        "replies": {"type": "string", "description": "Number of replies to this comment"},
         "photo": {"type": "string", "description": "Author profile photo URL"},
         "heart": {"type": "string", "description": "Whether comment received a creator heart"},
         "reply": {"type": "string", "description": "Whether this is a reply"},

@@ -5,18 +5,32 @@ import ollama
 MODEL = "gemma3:270m"
 DB_FILE = "comments.db"
 PROMPT_FILE = "prompt.txt"
+MAX_RETRIES = 3
+DEFAULT = {"angry": False, "negative": False, "response": False, "spam": False}
+
+def normalize_bool(value):
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in ("true", "yes", "1")
+    return bool(value)
 
 def classify_comment(comment_text, prompt_template):
     prompt = prompt_template.replace("{comment}", comment_text)
-    response = ollama.chat(
-        model=MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        format="json",
-    )
-    try:
-        return json.loads(response["message"]["content"])
-    except json.JSONDecodeError:
-        return {"angry": False, "negative": False, "response": False, "spam": False}
+    for attempt in range(MAX_RETRIES):
+        try:
+            response = ollama.chat(
+                model=MODEL,
+                messages=[{"role": "user", "content": prompt}],
+                format="json",
+                options={"temperature": 0.5},
+            )
+            raw = json.loads(response["message"]["content"])
+            return {k: normalize_bool(raw.get(k, False)) for k in DEFAULT}
+        except (json.JSONDecodeError, KeyError):
+            if attempt < MAX_RETRIES - 1:
+                continue
+    return dict(DEFAULT)
 
 def main():
     with open(PROMPT_FILE, "r", encoding="utf-8") as f:
@@ -37,10 +51,10 @@ def main():
             SET negative = ?, angry = ?, spam = ?, response = ?
             WHERE cid = ?
         """, (
-            str(result.get("negative", False)),
-            str(result.get("angry", False)),
-            str(result.get("spam", False)),
-            str(result.get("response", False)),
+            str(result["negative"]),
+            str(result["angry"]),
+            str(result["spam"]),
+            str(result["response"]),
             cid
         ))
         conn.commit()

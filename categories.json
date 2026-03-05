@@ -1,29 +1,29 @@
 {
   "categories": [
     {
-      "name": "Praise",
-      "description": "Positive feedback about the interview",
-      "count": 5
-    },
-    {
-      "name": "AI Ethics",
-      "description": "Comments about ethical concerns of AI",
-      "count": 3
-    },
-    {
       "name": "Criticism",
-      "description": "Negative or hostile comments",
+      "description": "Negative or disapproving comments",
       "count": 2
     },
     {
-      "name": "Questions",
-      "description": "Comments asking questions or seeking clarification",
-      "count": 4
+      "name": "Angry",
+      "description": "Hostile or aggressive comments",
+      "count": 1
     },
     {
       "name": "Spam",
       "description": "Promotional or off-topic comments",
-      "count": 1
+      "count": 126
+    },
+    {
+      "name": "Questions",
+      "description": "Comments that ask questions or need a reply",
+      "count": 2
+    },
+    {
+      "name": "Praise",
+      "description": "Positive or neutral feedback about the content",
+      "count": 2018
     }
   ]
 }

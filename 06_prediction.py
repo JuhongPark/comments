@@ -2,7 +2,7 @@ import json
 import sqlite3
 import ollama
 
-MODEL = "llama3.2:3b"
+MODEL = "gemma3:270m"
 DB_FILE = "comments.db"
 PROMPT_FILE = "prompt.txt"
 BATCH_SIZE = 100

@@ -1,7 +1,7 @@
 import json
 import ollama
 
-MODEL = "llama3.2:3b"
+MODEL = "gemma3:270m"
 
 def main():
     response = ollama.chat(

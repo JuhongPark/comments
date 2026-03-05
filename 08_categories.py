@@ -21,11 +21,17 @@ def main():
         model=MODEL,
         messages=[{
             "role": "user",
-            "content": f"Analyze these YouTube comments and identify the main thematic categories. "
-                       f"For each category, provide its name, description, and approximate count.\n\n"
-                       f"Respond in JSON format:\n"
-                       f'{{"categories": [{{"name": "...", "description": "...", "count": N}}]}}\n\n'
-                       f"Comments:\n{comments_block}"
+            "content": f"Task: categorize these YouTube comments into themes.\n\n"
+                       f"{comments_block}\n\n"
+                       f"Return JSON with multiple categories:\n"
+                       f'{{"categories": ['
+                       f'{{"name": "Praise", "description": "Positive feedback about the interview", "count": 5}}, '
+                       f'{{"name": "AI Ethics", "description": "Comments about ethical concerns of AI", "count": 3}}, '
+                       f'{{"name": "Criticism", "description": "Negative or hostile comments", "count": 2}}, '
+                       f'{{"name": "Questions", "description": "Comments asking questions or seeking clarification", "count": 4}}, '
+                       f'{{"name": "Spam", "description": "Promotional or off-topic comments", "count": 1}}'
+                       f']}}\n\n'
+                       f"Now categorize all the comments above. Return at least 3 categories:"
         }],
         format="json",
     )

@@ -1,3 +1,4 @@
+import os
 import subprocess
 import sys
 
@@ -12,6 +13,11 @@ PIPELINE_STEPS = [
     ("Extract categories", "08_categories.py"),
     ("Create visualization", "09_visualization.py"),
     ("Export dataset", "11_export.py"),
+]
+
+REQUIRED_FILES = [
+    ("sample_data.json", "Sample data"),
+    ("prompt.txt", "Classification prompt"),
 ]
 
 def run_step(name, script):
@@ -30,11 +36,36 @@ def run_step(name, script):
         print(f"[FAILED] {name} - Exit code: {e.returncode}")
         return False
 
+def check_required_files():
+    print(f"\n{'='*60}")
+    print("Step: Verify sample data (sample_data.json, prompt.txt)")
+    print(f"{'='*60}")
+    all_ok = True
+    for filepath, desc in REQUIRED_FILES:
+        if os.path.exists(filepath) and os.path.getsize(filepath) > 0:
+            print(f"  [OK] {filepath} exists")
+        else:
+            print(f"  [MISSING] {filepath}")
+            all_ok = False
+    if all_ok:
+        print("[SUCCESS] Verify sample data")
+    else:
+        print("[FAILED] Verify sample data")
+    return all_ok
+
 def main():
     print("Starting data pipeline...")
 
     failed_steps = []
-    for name, script in PIPELINE_STEPS:
+    for name, script in PIPELINE_STEPS[:4]:
+        success = run_step(name, script)
+        if not success:
+            failed_steps.append(name)
+
+    if not check_required_files():
+        failed_steps.append("Verify sample data")
+
+    for name, script in PIPELINE_STEPS[4:]:
         success = run_step(name, script)
         if not success:
             failed_steps.append(name)

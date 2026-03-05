@@ -1,3 +1,29 @@
 {
-  "response": "Thank you so much for the kind words! It was truly an honor to be interviewed with you. I appreciate you sharing your insights and experiences with me."
+  "categories": [
+    {
+      "name": "Praise",
+      "description": "Positive feedback about the interview",
+      "count": 5
+    },
+    {
+      "name": "AI Ethics",
+      "description": "Comments about ethical concerns of AI",
+      "count": 3
+    },
+    {
+      "name": "Criticism",
+      "description": "Negative or hostile comments",
+      "count": 2
+    },
+    {
+      "name": "Questions",
+      "description": "Comments asking questions or seeking clarification",
+      "count": 4
+    },
+    {
+      "name": "Spam",
+      "description": "Promotional or off-topic comments",
+      "count": 1
+    }
+  ]
 }

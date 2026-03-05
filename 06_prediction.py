@@ -5,7 +5,6 @@ import ollama
 MODEL = "gemma3:270m"
 DB_FILE = "comments.db"
 PROMPT_FILE = "prompt.txt"
-BATCH_SIZE = 100
 
 def classify_comment(comment_text, prompt_template):
     prompt = prompt_template.replace("{comment}", comment_text)
@@ -26,7 +25,7 @@ def main():
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT cid, text FROM comments ORDER BY rowid LIMIT ?", (BATCH_SIZE,))
+    cursor.execute("SELECT cid, text FROM comments ORDER BY rowid")
     rows = cursor.fetchall()
 
     print(f"Classifying {len(rows)} comments...")

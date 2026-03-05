@@ -14,6 +14,11 @@
 - All task progress must be checked against this document
 - Original document content must not be summarized or modified
 
+## Prompt Engineering
+- Crafting high-quality prompts is critical to the success of this project
+- Prompts must be precise, well-structured, and tested to ensure reliable LLM outputs
+- Small models require especially clear and constrained prompts to produce correct results
+
 ## Project Structure
 - Reference and policy documents go in the `docs/` folder
 - Remove unnecessary files; keep only the spec document

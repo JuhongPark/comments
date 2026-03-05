@@ -1,12 +1,16 @@
-Classify the following YouTube comment into four categories. Respond ONLY with a JSON object.
+You are a comment classifier. Output ONLY a JSON object with exactly 4 boolean fields.
 
+Example 1:
+Comment: "Great video, very informative!"
+{"angry": false, "negative": false, "response": false, "spam": false}
+
+Example 2:
+Comment: "This is terrible and you should be ashamed"
+{"angry": true, "negative": true, "response": true, "spam": false}
+
+Example 3:
+Comment: "Subscribe to my channel for free stuff!"
+{"angry": false, "negative": false, "response": false, "spam": true}
+
+Now classify this comment:
 Comment: "{comment}"
-
-Classify as:
-- "angry": Is the comment expressing anger? (true/false)
-- "negative": Is the comment negative in sentiment? (true/false)
-- "response": Does this comment require a response? (true/false)
-- "spam": Is this comment spam? (true/false)
-
-Respond in this exact JSON format:
-{"angry": true/false, "negative": true/false, "response": true/false, "spam": true/false}

@@ -62,10 +62,6 @@
       "response": {
         "type": "string",
         "description": "LLM classification: needs response"
-      },
-      "responses": {
-        "type": "string",
-        "description": "Generated response text"
       }
     },
     "assumptions": [

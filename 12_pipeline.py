@@ -8,7 +8,7 @@ PIPELINE_STEPS = [
     ("Count comments", "02_count.py"),
     ("Create database", "03_database.py"),
     ("Ping LLM", "05_ping_llm.py"),
-    ("Predict four factors", "06_prediction.py"),
+    ("Predict four factors", "06_prediction.py", ["--reclassify"]),
     ("Create responses", "07_create_responses.py"),
     ("Extract categories", "08_categories.py"),
     ("Create visualization", "09_visualization.py"),
@@ -20,13 +20,14 @@ REQUIRED_FILES = [
     ("prompt.txt", "Classification prompt"),
 ]
 
-def run_step(name, script):
+def run_step(name, script, extra_args=None):
     print(f"\n{'='*60}")
     print(f"Step: {name} ({script})")
     print(f"{'='*60}")
     try:
+        cmd = [sys.executable, script] + (extra_args or [])
         subprocess.run(
-            [sys.executable, script],
+            cmd,
             check=True,
             capture_output=False,
         )
@@ -57,16 +58,20 @@ def main():
     print("Starting data pipeline...")
 
     failed_steps = []
-    for name, script in PIPELINE_STEPS[:4]:
-        success = run_step(name, script)
+    for step in PIPELINE_STEPS[:4]:
+        name, script = step[0], step[1]
+        extra = step[2] if len(step) > 2 else None
+        success = run_step(name, script, extra)
         if not success:
             failed_steps.append(name)
 
     if not check_required_files():
         failed_steps.append("Verify sample data")
 
-    for name, script in PIPELINE_STEPS[4:]:
-        success = run_step(name, script)
+    for step in PIPELINE_STEPS[4:]:
+        name, script = step[0], step[1]
+        extra = step[2] if len(step) > 2 else None
+        success = run_step(name, script, extra)
         if not success:
             failed_steps.append(name)
 

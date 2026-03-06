@@ -2,7 +2,7 @@ import json
 import sqlite3
 import ollama
 
-MODEL = "gemma3:270m"
+MODEL = "gemma3:1b-it-qat"
 DB_FILE = "comments.db"
 OUTPUT_FILE = "categories.json"
 SAMPLE_SIZE = 100

@@ -1,0 +1,10 @@
+Classify this YouTube comment about an AI interview. Default is false.
+
+angry: true if comment insults or attacks someone. "clown", "sleazy", "idiot", "NOTHING", "killed" = angry.
+negative: true if comment complains or criticizes. If angry then also negative. Praise, jokes, ideas = NOT negative.
+response: true if the commenter is asking something or suggesting something to the creator.
+spam: true if completely off-topic or has promotional links.
+
+{"angry": false, "negative": false, "response": false, "spam": false}
+
+Comment: "{comment}"

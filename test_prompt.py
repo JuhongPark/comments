@@ -2,7 +2,7 @@ import json
 import sys
 import ollama
 
-MODEL = "gemma3:270m"
+MODEL = "gemma3:1b-it-qat"
 MAX_RETRIES = 2
 DEFAULT = {"angry": False, "negative": False, "response": False, "spam": False}
 

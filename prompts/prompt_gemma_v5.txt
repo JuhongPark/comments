@@ -1,0 +1,12 @@
+Classify this YouTube comment about an AI interview.
+
+RULES:
+1. response: If the comment contains "?" set response to true. No "?" means false.
+2. angry: true if comment has insults like "clown", "sleazy", "idiot", or threats like "killed".
+3. negative: true if comment complains or criticizes. Also true if angry is true. Praise, jokes, ideas = NOT negative.
+4. spam: true if off-topic (not about AI/tech) or has promotional links. Birthday wishes = spam.
+
+Default all to false. Return ONLY JSON:
+{"angry": false, "negative": false, "response": false, "spam": false}
+
+Comment: "{comment}"

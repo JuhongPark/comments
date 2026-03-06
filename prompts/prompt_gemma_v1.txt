@@ -1,0 +1,10 @@
+Classify this YouTube comment. Default is false for all fields.
+
+angry: true ONLY if the comment has insults, name-calling, or threats. Words like "clown", "sleazy", "idiot" are insults.
+negative: true ONLY if the comment complains or criticizes. Praise, jokes, questions, and neutral observations are NOT negative.
+response: true ONLY if the comment asks a direct question to the creator using "?". General statements do not need response.
+spam: true ONLY if the comment is off-topic or has self-promotion links.
+
+Return JSON: {"angry": false, "negative": false, "response": false, "spam": false}
+
+Comment: "{comment}"

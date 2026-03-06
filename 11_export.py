@@ -21,8 +21,7 @@
 #
 # Assumptions and Decisions:
 #   - Classification results (negative, angry, spam, response) are LLM predictions
-#     using gemma3:270m, a small model with ~85% accuracy. Results may contain
-#     misclassifications, especially for long comments or subtle tone.
+#     using gemma3:1b-it-qat and may contain misclassifications.
 #   - All field values are stored as strings because SQLite does not enforce strict
 #     typing. Boolean classifications are stored as "True"/"False" strings.
 #   - The "response" field is primarily determined by whether the comment contains
@@ -72,7 +71,7 @@ def main():
             "total_records": len(rows),
             "columns": {col: column_descriptions[col] for col in columns if col in column_descriptions},
             "assumptions": [
-                "Classification results are LLM predictions using gemma3:270m (~85% accuracy) and may contain misclassifications",
+                "Classification results are LLM predictions using gemma3:1b-it-qat and may contain misclassifications",
                 "All values are stored as strings due to SQLite's flexible typing. Boolean fields use 'True'/'False' strings",
                 "The response field is primarily based on question mark presence, as this was the most reliable signal for the model",
                 "Comments are a point-in-time snapshot and may not reflect current state of the video",

@@ -49,7 +49,7 @@ Comments are converted to embeddings using a pre-trained sentence model, cluster
 | responses | string | Generated response text (null if not applicable) |
 
 Assumptions and Decisions:
-- Classification results are LLM predictions using gemma3:270m (~85% accuracy) and may contain misclassifications, especially for long comments or subtle tone
+- Classification results are LLM predictions using gemma3:1b-it-qat and may contain misclassifications
 - All values are stored as strings due to SQLite's flexible typing. Boolean fields use "True"/"False" strings
 - The response field is primarily based on question mark ("?") presence, as this was the most reliable signal for the model
 - Comments are a point-in-time snapshot and may not reflect the current state of the video
@@ -57,7 +57,7 @@ Assumptions and Decisions:
 
 ## Model Selection
 
-Using gemma3:270m via Ollama. Initially tested gemma3:1b (larger model), but found that both models struggle with classification accuracy without good prompts. On a 2-core Codespace environment, the smaller model runs significantly faster while achieving comparable results when paired with a well-engineered prompt. This led to a strategy shift: prompt engineering matters more than model size for this classification task.
+Using gemma3:1b-it-qat via Ollama. A quantization-aware trained variant of gemma3:1b that provides better instruction following than the base gemma3:1b while maintaining fast inference speed.
 
 ## Prompt Engineering
 
@@ -66,4 +66,4 @@ Tested 28 prompt variations (v2–v29) against a 25-comment ground truth dataset
 - Explicit "NOT negative" rules for praise/jokes prevent false positives
 - Defining response detection via "?" question marks gives clearer signal than vague definitions
 - Adding specific insult words (clown, sleazy, idiot) helps angry detection
-- Best result: prompt_v17 — 85% overall accuracy (angry 92%, negative 76%, response 80%, spam 92%)
+- Best prompt: prompt_v17

@@ -4,7 +4,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import ollama
 
-MODEL = "gemma3:270m"
+MODEL = "gemma3:1b-it-qat"
 DB_FILE = "comments.db"
 MAX_WORKERS = 4
 MAX_RETRIES = 2

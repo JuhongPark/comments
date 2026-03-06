@@ -1,3 +1,37 @@
+# clean_dataset.json Structure Documentation
+#
+# File format: JSON with two top-level keys: "metadata" and "data"
+#
+# Columns:
+#   cid        (string) - Unique comment ID from YouTube
+#   text       (string) - Comment text content
+#   time       (string) - Relative time string (e.g. "2 years ago")
+#   author     (string) - Comment author name
+#   channel    (string) - Author YouTube channel ID
+#   votes      (string) - Number of likes on the comment
+#   photo      (string) - Author profile photo URL
+#   heart      (string) - Whether the comment received a creator heart
+#   reply      (string) - Whether this comment is a reply to another comment
+#   time_parsed(string) - Parsed Unix timestamp
+#   negative   (string) - LLM classification: negative sentiment (True/False)
+#   angry      (string) - LLM classification: angry tone (True/False)
+#   spam       (string) - LLM classification: spam content (True/False)
+#   response   (string) - LLM classification: needs response (True/False)
+#   responses  (string) - Generated response text (null if not applicable)
+#
+# Assumptions and Decisions:
+#   - Classification results (negative, angry, spam, response) are LLM predictions
+#     using gemma3:270m, a small model with ~85% accuracy. Results may contain
+#     misclassifications, especially for long comments or subtle tone.
+#   - All field values are stored as strings because SQLite does not enforce strict
+#     typing. Boolean classifications are stored as "True"/"False" strings.
+#   - The "response" field is primarily determined by whether the comment contains
+#     a question mark ("?"), as this was the most reliable signal for the small model.
+#   - Comments are a point-in-time snapshot. New comments or deleted comments on
+#     the video are not reflected in this dataset.
+#   - The "responses" column is only populated for comments where response=True.
+#     All other comments have null for this field.
+
 import json
 import sqlite3
 
@@ -38,8 +72,11 @@ def main():
             "total_records": len(rows),
             "columns": {col: column_descriptions[col] for col in columns if col in column_descriptions},
             "assumptions": [
-                "All classification fields are populated by LLM predictions",
-                "Responses are generated only for comments flagged as needing a response",
+                "Classification results are LLM predictions using gemma3:270m (~85% accuracy) and may contain misclassifications",
+                "All values are stored as strings due to SQLite's flexible typing. Boolean fields use 'True'/'False' strings",
+                "The response field is primarily based on question mark presence, as this was the most reliable signal for the model",
+                "Comments are a point-in-time snapshot and may not reflect current state of the video",
+                "The responses column is only populated for comments where response=True",
             ]
         },
         "data": [dict(row) for row in rows]

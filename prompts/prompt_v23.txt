@@ -1,0 +1,23 @@
+Task: classify comment -> {"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+angry = hostile language, insults (clown, sleazy, idiot, crap, stupid, killed, kno nothing)
+negative = criticism or complaint. NOT: jokes, praise, excitement, observations
+response = "?" found in comment -> true
+spam = off-topic, birthday wishes, self-promotion, external links
+
+"Love this!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"Sam is smart" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"looks like hitman 😅" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"vocal fry pioneer" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"two AI guys discussing" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"What?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Is this real?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Why not ask about X?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"should ask technical questions" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"kno nothing sales man" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"CLOWN. Pioneer of NOTHING" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"full of crap!" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Happy birthday 🎉" -> {"angry":false,"negative":false,"response":false,"spam":true}
+"my podcast http://link" -> {"angry":false,"negative":false,"response":false,"spam":true}
+
+Comment: "{comment}"

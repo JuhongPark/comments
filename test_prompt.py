@@ -1,10 +1,8 @@
 import json
-import sqlite3
 import sys
 import ollama
 
 MODEL = "gemma3:270m"
-DB_FILE = "comments.db"
 MAX_RETRIES = 2
 DEFAULT = {"angry": False, "negative": False, "response": False, "spam": False}
 
@@ -39,41 +37,51 @@ def main():
     with open(prompt_file, "r") as f:
         prompt_template = f.read()
 
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute("SELECT cid, text FROM comments ORDER BY rowid LIMIT 100")
-    rows = c.fetchall()
-    conn.close()
+    with open("sample_data.json", "r") as f:
+        samples = json.load(f)
 
-    results = []
-    for i, (cid, text) in enumerate(rows):
-        r = classify(text, prompt_template)
-        results.append(r)
-        if (i + 1) % 25 == 0:
-            print(f"  {i+1}/100...", flush=True)
+    with open("sample_expected.json", "r") as f:
+        expected = json.load(f)
 
-    # Stats
-    total = len(results)
-    counts = {k: sum(1 for r in results if r[k]) for k in DEFAULT}
+    total = len(samples)
+    correct_per_field = {k: 0 for k in DEFAULT}
+    wrong = []
 
-    print(f"\n{'='*50}")
+    for i, comment in enumerate(samples):
+        cid = comment["cid"]
+        text = comment["text"]
+        pred = classify(text, prompt_template)
+        exp = expected[cid]
+
+        for k in DEFAULT:
+            if pred[k] == exp[k]:
+                correct_per_field[k] += 1
+            else:
+                wrong.append((i + 1, text[:60], k, pred[k], exp[k]))
+
+        if (i + 1) % 10 == 0:
+            print(f"  {i+1}/{total}...", flush=True)
+
+    print(f"\n{'='*60}")
     print(f"Prompt: {prompt_file}")
-    print(f"Model: {MODEL} | Comments: {total}")
-    print(f"{'='*50}")
-    for k, v in counts.items():
-        print(f"  {k:>10}: {v:>3}/{total}  ({v*100//total}%)")
-    print(f"{'='*50}")
+    print(f"Model: {MODEL} | Sample size: {total}")
+    print(f"{'='*60}")
 
-    # Show some examples where response=true
-    print(f"\nSample response=true comments:")
-    resp_true = [(rows[i][1], results[i]) for i in range(total) if results[i]["response"]]
-    for text, r in resp_true[:5]:
-        print(f"  - {text[:80]}  {r}")
+    total_checks = total * 4
+    total_correct = sum(correct_per_field.values())
+    print(f"  Overall accuracy: {total_correct}/{total_checks} ({total_correct*100//total_checks}%)")
+    print()
+    for k in DEFAULT:
+        acc = correct_per_field[k] * 100 // total
+        print(f"  {k:>10}: {correct_per_field[k]}/{total} ({acc}%)")
 
-    print(f"\nSample response=false comments:")
-    resp_false = [(rows[i][1], results[i]) for i in range(total) if not results[i]["response"]]
-    for text, r in resp_false[:5]:
-        print(f"  - {text[:80]}  {r}")
+    if wrong:
+        print(f"\n{'='*60}")
+        print(f"Misclassifications ({len(wrong)}):")
+        for idx, text, field, pred_val, exp_val in wrong:
+            print(f"  #{idx:2d} [{field}] pred={pred_val} exp={exp_val} | {text}")
+
+    print(f"{'='*60}")
 
 
 if __name__ == "__main__":

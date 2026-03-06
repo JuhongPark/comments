@@ -1,18 +1,12 @@
-You classify YouTube comments. Output JSON: {"angry":bool,"negative":bool,"response":bool,"spam":bool}
+You are a YouTube comment moderator. Classify the following comment into four categories and return a JSON response.
 
-angry = uses insults, threats, or hostile tone
-negative = clearly unhappy or complaining about the video/topic. NOT negative: praise, jokes, observations, excitement
-spam = ads, self-promotion, unrelated links
-response = contains "?" asking a question
+Categories:
+- angry: The comment expresses hostility, uses insults, name-calling, threats, or an aggressive tone toward a person or group.
+- negative: The comment expresses dissatisfaction, criticism, or complaint about the video, the topic, or the people involved. Neutral observations, jokes, praise, and excitement are NOT negative.
+- response: The comment warrants a response. This includes direct questions, requests for clarification, constructive suggestions directed at the creator, or comments that invite dialogue. Rhetorical statements and general observations do not require a response.
+- spam: The comment is off-topic (unrelated to the video's subject), contains self-promotion, unsolicited links, or is otherwise irrelevant to the discussion.
 
-"Love this!" -> {"angry":false,"negative":false,"response":false,"spam":false}
-"Sam is so smart" -> {"angry":false,"negative":false,"response":false,"spam":false}
-"Thank you Lex" -> {"angry":false,"negative":false,"response":false,"spam":false}
-"Interesting point about AI" -> {"angry":false,"negative":false,"response":false,"spam":false}
-"What time?" -> {"angry":false,"negative":false,"response":true,"spam":false}
-"Can you explain?" -> {"angry":false,"negative":false,"response":true,"spam":false}
-"Boring interview" -> {"angry":false,"negative":true,"response":false,"spam":false}
-"He's full of crap!" -> {"angry":true,"negative":true,"response":false,"spam":false}
-"Sub 4 sub" -> {"angry":false,"negative":false,"response":false,"spam":true}
+Return ONLY a JSON object in this exact format:
+{"angry": true/false, "negative": true/false, "response": true/false, "spam": true/false}
 
 Comment: "{comment}"

@@ -6,11 +6,35 @@ import ollama
 
 MODEL = "gemma3:270m"
 DB_FILE = "comments.db"
-PROMPT_FILE = "prompt.txt"
 MAX_WORKERS = 4
 MAX_RETRIES = 2
 BATCH_COMMIT_SIZE = 50
 DEFAULT = {"angry": False, "negative": False, "response": False, "spam": False}
+
+PROMPT_TEMPLATE = """Classify YouTube comment. JSON: {"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+angry = insults, name-calling, hostility. Examples: "idiot", "clown", "sleazy", "crap", "stupid", "killed"
+negative = unhappy, criticizing, complaining. NOT negative: praise, jokes, humor, excitement, observations
+response = comment contains "?" (question mark) = true. No "?" = false.
+spam = off-topic (not about AI/interview), self-promotion, links to other channels
+
+"Love this!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"Sam is so smart" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"He looks like hitman 😅" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"pioneer in vocal fry" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"What time?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Is this real?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"His family safe though... right?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"Did you not ask him about X?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"Boring interview" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"sleazy sales man" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Look at the CLOWN" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"He's full of crap!" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Happy birthday!" -> {"angry":false,"negative":false,"response":false,"spam":true}
+"Check my podcast http://link" -> {"angry":false,"negative":false,"response":false,"spam":true}
+
+Comment: "{comment}"
+"""
 
 
 def normalize_bool(value):
@@ -42,8 +66,7 @@ def classify_comment(cid, comment_text, prompt_template):
 def main():
     reclassify = "--reclassify" in sys.argv
 
-    with open(PROMPT_FILE, "r", encoding="utf-8") as f:
-        prompt_template = f.read()
+    prompt_template = PROMPT_TEMPLATE
 
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()

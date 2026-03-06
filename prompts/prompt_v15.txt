@@ -1,0 +1,17 @@
+Classify this YouTube comment as JSON: {"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+angry = insults or hostility
+negative = complaining or criticizing
+response = has a question mark "?"
+spam = off-topic or self-promotion
+
+"You're an idiot" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"What time?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Great video!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"Check my channel http://link" -> {"angry":false,"negative":false,"response":false,"spam":true}
+"This is boring" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"Is this real?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Happy birthday!" -> {"angry":false,"negative":false,"response":false,"spam":true}
+"Stupid clown" -> {"angry":true,"negative":true,"response":false,"spam":false}
+
+Comment: "{comment}"

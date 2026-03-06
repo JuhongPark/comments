@@ -1,0 +1,27 @@
+Classify comment into 4 categories. Return JSON.
+
+For each category, answer YES (true) or NO (false):
+- angry: Does this comment insult or attack someone? (clown, sleazy, idiot, stupid, crap, killed, kno nothing = angry)
+- negative: Is the commenter unhappy or critical? (praise, jokes, humor, excitement = NOT negative)
+- response: Does the comment contain "?" anywhere? (any question mark = response)
+- spam: Is this off-topic (not about AI) or self-promotion? (birthday wishes, podcast links = spam)
+
+{"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+"Great video!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"He looks like hitman 😅" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"pioneer in vocal fry" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"priceless discussion" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"What time?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Is this real?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Did you not ask about X?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"His family safe right?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"should ask technical questions" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"sleazy kno nothing sales man" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Look at the CLOWN. NOTHING" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"He's full of crap!" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Why did you have him killed?" -> {"angry":true,"negative":true,"response":true,"spam":false}
+"Happy birthday 🎉" -> {"angry":false,"negative":false,"response":false,"spam":true}
+"Check my podcast http://link" -> {"angry":false,"negative":false,"response":false,"spam":true}
+
+Comment: "{comment}"

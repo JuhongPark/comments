@@ -1,0 +1,8 @@
+You must classify this YouTube comment into 4 categories.
+IMPORTANT: If the comment contains "?" then response MUST be true.
+IMPORTANT: If the comment uses insults or hostile words, angry MUST be true.
+IMPORTANT: Off-topic comments not about AI are spam.
+
+Output ONLY this JSON format: {"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+Comment: "{comment}"

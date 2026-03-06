@@ -1,0 +1,25 @@
+Classify YouTube comment. Output: {"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+angry: insults, name-calling, threats. "clown","sleazy","idiot","crap","stupid","killed","kno nothing","fool"
+negative: unhappy, criticizing, complaining. Jokes/praise/excitement/observations = false
+response: comment has question mark "?" = true. No "?" = false.
+spam: off-topic (birthday, religion, politics), self-promotion, links
+
+"Great video, thanks!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"He looks like hitman 😅" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"Sam also asks Lex questions. True engagement!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"pioneer in vocal fry" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"priceless discussion 👍" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"What time?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Is this real?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Can you explain?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Did you not ask about X?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"Why did you have him killed?" -> {"angry":true,"negative":true,"response":true,"spam":false}
+"should ask technical questions" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"sleazy kno nothing sales man" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Look at the CLOWN. Pioneer of NOTHING" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"He's full of crap!" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Happy birthday 🎉" -> {"angry":false,"negative":false,"response":false,"spam":true}
+"Check my podcast http://link" -> {"angry":false,"negative":false,"response":false,"spam":true}
+
+Comment: "{comment}"

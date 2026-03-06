@@ -1,0 +1,19 @@
+Classify YouTube comment as JSON: {"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+IMPORTANT RULES:
+- angry: ANY insult or hostile word = true. "clown","sleazy","idiot","crap","killed","stupid","nothing"
+- negative: commenter is unhappy/criticizing. Praise, jokes, humor = NOT negative
+- response: if comment has "?" then true. Otherwise false.
+- spam: not about AI or the interview, or has links/self-promotion
+
+Examples:
+"Great!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"looks funny 😅" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"What?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Why not?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"You idiot" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"CLOWN" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Happy birthday" -> {"angry":false,"negative":false,"response":false,"spam":true}
+"Sub my channel" -> {"angry":false,"negative":false,"response":false,"spam":true}
+
+Comment: "{comment}"

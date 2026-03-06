@@ -1,0 +1,23 @@
+Classify YouTube comment. JSON: {"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+RULES:
+1. angry = insults or hostility. Words: "idiot","clown","sleazy","crap","stupid","killed","nothing"
+2. negative = unhappy or criticizing. NOT negative: praise, jokes, humor, excitement
+3. response = if "?" appears ANYWHERE in the comment, response=true
+4. spam = not about AI/interview, OR self-promotion with links
+
+"Love this!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"He looks like hitman 😅" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"pioneer in vocal fry" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"ask technical questions next time" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"What time?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Is this real?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"safe though... right?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"Did you not ask about X?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"sleazy sales man" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Look at the CLOWN. Pioneer of NOTHING" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Why did you have him killed?" -> {"angry":true,"negative":true,"response":true,"spam":false}
+"Happy birthday!" -> {"angry":false,"negative":false,"response":false,"spam":true}
+"Check my podcast http://link" -> {"angry":false,"negative":false,"response":false,"spam":true}
+
+Comment: "{comment}"

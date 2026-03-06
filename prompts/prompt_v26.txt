@@ -1,0 +1,19 @@
+{"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+angry: insults (clown, sleazy, idiot, crap, stupid, killed)
+negative: criticism, complaint (NOT jokes, praise, humor)
+response: has "?" = true
+spam: off-topic, self-promo, links, birthday
+
+"Great!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"looks funny 😅" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"vocal fry" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"What?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"right?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"Boring" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"CLOWN" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"sleazy" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"killed?" -> {"angry":true,"negative":true,"response":true,"spam":false}
+"birthday!" -> {"angry":false,"negative":false,"response":false,"spam":true}
+
+Comment: "{comment}"

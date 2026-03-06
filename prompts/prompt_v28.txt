@@ -1,0 +1,29 @@
+Classify YouTube comment. JSON output only.
+
+angry = comment contains insults or attacks. Words: clown, sleazy, idiot, stupid, crap, fool, killed, kno nothing
+negative = commenter is unhappy, disappointed, or critical. Humor and praise are NOT negative.
+response = comment contains "?" character = true. No "?" = false.
+spam = comment is NOT about AI or the interview. Birthday wishes, channel promotion, external links = spam.
+
+{"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+"Love this!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"Sam is smart" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"He looks like hitman 😅" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"pioneer in vocal fry" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"I like that Sam asks questions" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"priceless 👍" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"What time?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Is this real?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Did you not ask about that?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"His family safe right?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"Why did you have him killed?" -> {"angry":true,"negative":true,"response":true,"spam":false}
+"should ask technical questions" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"Boring interview" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"sleazy kno nothing sales man" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Look at the CLOWN. Pioneer of NOTHING" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"He's full of crap!" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Happy birthday 🎉" -> {"angry":false,"negative":false,"response":false,"spam":true}
+"Check my podcast http://link" -> {"angry":false,"negative":false,"response":false,"spam":true}
+
+Comment: "{comment}"

@@ -1,0 +1,16 @@
+Read the comment and answer YES or NO for each.
+Output JSON: {"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+1. angry: Does it attack or insult someone? YES=true
+2. negative: Does it complain or criticize? YES=true. Praise and jokes are NO.
+3. response: Does it have a "?" question mark? YES=true
+4. spam: Is it off-topic or self-promotion? YES=true
+
+"Great video!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"This is garbage" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"You idiot" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"What do you think?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Happy birthday!" -> {"angry":false,"negative":false,"response":false,"spam":true}
+"Check my channel" -> {"angry":false,"negative":false,"response":false,"spam":true}
+
+Comment: "{comment}"

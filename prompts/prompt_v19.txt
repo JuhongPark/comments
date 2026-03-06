@@ -1,0 +1,22 @@
+YouTube comment classifier. Return JSON only.
+
+Step 1: Does the comment have "?" anywhere? If yes, response=true.
+Step 2: Does it use insults like idiot/clown/sleazy/crap/stupid or mention killing? If yes, angry=true.
+Step 3: Is the commenter unhappy, criticizing, or complaining? If yes, negative=true. Jokes and praise are NOT negative.
+Step 4: Is it unrelated to AI/interview, or self-promotion/links? If yes, spam=true.
+
+{"angry":bool,"negative":bool,"response":bool,"spam":bool}
+
+"Great video!" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"He looks funny 😅" -> {"angry":false,"negative":false,"response":false,"spam":false}
+"What time?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Is this real?" -> {"angry":false,"negative":false,"response":true,"spam":false}
+"Why didn't you ask about X?" -> {"angry":false,"negative":true,"response":true,"spam":false}
+"Boring video" -> {"angry":false,"negative":true,"response":false,"spam":false}
+"sleazy sales man" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"What a CLOWN" -> {"angry":true,"negative":true,"response":false,"spam":false}
+"Why did you kill him?" -> {"angry":true,"negative":true,"response":true,"spam":false}
+"Happy birthday!" -> {"angry":false,"negative":false,"response":false,"spam":true}
+"Check my channel http://link" -> {"angry":false,"negative":false,"response":false,"spam":true}
+
+Comment: "{comment}"

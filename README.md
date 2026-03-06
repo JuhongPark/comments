@@ -70,11 +70,11 @@ Selected gemma3:1b-it-qat as the final model. Although smaller than llama3.2:3b,
 
 ## Prompt Engineering
 
-Tested 28 prompt variations for llama3.2:3b (v2-v29) and 10 prompt variations for gemma3:1b-it-qat (gemma_v1-v10) against a 25-comment ground truth dataset (see `prompts/` folder).
+Tested 28 prompt variations for llama3.2:3b (v2-v29) and 10 prompt variations for gemma3:1b-it-qat (gemma3_1b-it-qat_v1-v10) against a 25-comment ground truth dataset (see `prompts/` folder).
 
 Key findings for gemma3:1b-it-qat:
 - "Default is false for all" framing dramatically reduced false positives (58% -> 74%)
 - Specifying the video topic ("about an AI interview") helped the model understand context
 - Explicit "NOT negative" rules for praise/jokes/ideas eliminated negative false positives
 - Adding specific insult words (clown, sleazy, idiot, NOTHING, killed) helps angry detection
-- Best prompt: prompt_gemma_v3 (85% accuracy, zero false positives across all fields)
+- Best prompt: prompt_gemma3_1b-it-qat_v3 (85% accuracy, zero false positives across all fields)

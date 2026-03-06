@@ -75,12 +75,13 @@ def main():
         cursor.execute("SELECT cid, text FROM comments ORDER BY rowid")
         print("Reclassifying all comments (--reclassify flag set)...")
     else:
-        cursor.execute("SELECT cid, text FROM comments WHERE negative IS NULL OR negative = '' ORDER BY rowid")
+        cursor.execute("SELECT cid, text FROM comments ORDER BY rowid LIMIT 100")
+        print("Classifying first 100 comments (use --reclassify for all)...")
 
     rows = cursor.fetchall()
 
     if not rows:
-        print("All comments already classified. Use --reclassify to force reclassification.")
+        print("No comments to classify.")
         conn.close()
         return
 

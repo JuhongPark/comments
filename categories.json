@@ -1,29 +1,28 @@
 {
   "categories": [
     {
-      "name": "Criticism",
-      "description": "Negative or disapproving comments",
-      "count": 2
+      "name": "Ethical Concerns",
+      "description": "Comments about AI safety, alignment, and moral implications"
     },
     {
-      "name": "Angry",
-      "description": "Hostile or aggressive comments",
-      "count": 1
+      "name": "Technical Discussion",
+      "description": "Comments about AI architecture, capabilities, and limitations"
     },
     {
-      "name": "Spam",
-      "description": "Promotional or off-topic comments",
-      "count": 126
+      "name": "Humor",
+      "description": "Jokes and humorous observations about the interview or AI"
     },
     {
-      "name": "Questions",
-      "description": "Comments that ask questions or need a reply",
-      "count": 2
+      "name": "Future Predictions",
+      "description": "Speculation about AI's future impact on society"
     },
     {
       "name": "Praise",
-      "description": "Positive or neutral feedback about the content",
-      "count": 2018
+      "description": "Positive feedback about the interview or participants"
+    },
+    {
+      "name": "Criticism",
+      "description": "Negative feedback or complaints about the content"
     }
   ]
 }

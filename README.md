@@ -57,13 +57,24 @@ Assumptions and Decisions:
 
 ## Model Selection
 
-Using gemma3:1b-it-qat via Ollama. A quantization-aware trained variant of gemma3:1b that provides better instruction following than the base gemma3:1b while maintaining fast inference speed.
+Tested multiple models via Ollama to find the best balance of accuracy and speed:
+
+| Model | Size | Accuracy | Notes |
+|-------|------|----------|-------|
+| gemma3:270m | 270M | ~50% | Fast, but predicted all-False regardless of input |
+| gemma3:1b | 1B | ~67% | Predicted almost all-True for every field |
+| llama3.2:3b | 3B | ~80% | Good accuracy, but too slow for 2000+ comments |
+| **gemma3:1b-it-qat** | **1B** | **85%** | **QAT variant with prompt optimization** |
+
+Selected gemma3:1b-it-qat as the final model. Although smaller than llama3.2:3b, prompt optimization (10 iterations on 25-sample ground truth) compensated for the size difference, achieving 85% accuracy with significantly faster inference.
 
 ## Prompt Engineering
 
-Tested 28 prompt variations (v2–v29) against a 25-comment ground truth dataset (see `prompts/` folder). Key findings:
-- Too many few-shot examples cause the small model to over-trigger or copy the first example
-- Explicit "NOT negative" rules for praise/jokes prevent false positives
-- Defining response detection via "?" question marks gives clearer signal than vague definitions
-- Adding specific insult words (clown, sleazy, idiot) helps angry detection
-- Best prompt: prompt_v17
+Tested 28 prompt variations for llama3.2:3b (v2-v29) and 10 prompt variations for gemma3:1b-it-qat (gemma_v1-v10) against a 25-comment ground truth dataset (see `prompts/` folder).
+
+Key findings for gemma3:1b-it-qat:
+- "Default is false for all" framing dramatically reduced false positives (58% -> 74%)
+- Specifying the video topic ("about an AI interview") helped the model understand context
+- Explicit "NOT negative" rules for praise/jokes/ideas eliminated negative false positives
+- Adding specific insult words (clown, sleazy, idiot, NOTHING, killed) helps angry detection
+- Best prompt: prompt_gemma_v3 (85% accuracy, zero false positives across all fields)

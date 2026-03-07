@@ -1,12 +1,10 @@
 import json
 import sqlite3
 import sys
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import ollama
 
 MODEL = "gemma3:1b-it-qat"
 DB_FILE = "comments.db"
-MAX_WORKERS = 4
 MAX_RETRIES = 2
 BATCH_COMMIT_SIZE = 50
 DEFAULT = {"angry": False, "negative": False, "response": False, "spam": False}
@@ -72,11 +70,11 @@ def main():
     cursor = conn.cursor()
 
     if reclassify:
-        cursor.execute("SELECT cid, text FROM comments ORDER BY rowid")
-        print("Reclassifying all comments (--reclassify flag set)...")
+        cursor.execute("SELECT cid, text FROM comments WHERE negative IS NULL OR negative = '' ORDER BY rowid")
+        print("Classifying unprocessed comments (--reclassify flag set)...")
     else:
-        cursor.execute("SELECT cid, text FROM comments ORDER BY rowid LIMIT 100")
-        print("Classifying first 100 comments (use --reclassify for all)...")
+        cursor.execute("SELECT cid, text FROM comments WHERE negative IS NULL OR negative = '' ORDER BY rowid LIMIT 100")
+        print("Classifying first 100 unprocessed comments...")
 
     rows = cursor.fetchall()
 
@@ -85,32 +83,25 @@ def main():
         conn.close()
         return
 
-    print(f"Classifying {len(rows)} comments with {MAX_WORKERS} parallel workers...")
+    print(f"Classifying {len(rows)} comments sequentially...")
 
-    completed = 0
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        futures = {
-            executor.submit(classify_comment, cid, text, prompt_template): cid
-            for cid, text in rows
-        }
-
-        for future in as_completed(futures):
-            cid, result = future.result()
-            cursor.execute("""
-                UPDATE comments
-                SET negative = ?, angry = ?, spam = ?, response = ?
-                WHERE cid = ?
-            """, (
-                str(result["negative"]),
-                str(result["angry"]),
-                str(result["spam"]),
-                str(result["response"]),
-                cid
-            ))
-            completed += 1
-            if completed % BATCH_COMMIT_SIZE == 0 or completed == len(rows):
-                conn.commit()
-                print(f"  Processed {completed}/{len(rows)} comments")
+    for i, (cid, text) in enumerate(rows):
+        _, result = classify_comment(cid, text, prompt_template)
+        cursor.execute("""
+            UPDATE comments
+            SET negative = ?, angry = ?, spam = ?, response = ?
+            WHERE cid = ?
+        """, (
+            str(result["negative"]),
+            str(result["angry"]),
+            str(result["spam"]),
+            str(result["response"]),
+            cid
+        ))
+        completed = i + 1
+        if completed % BATCH_COMMIT_SIZE == 0 or completed == len(rows):
+            conn.commit()
+            print(f"  Processed {completed}/{len(rows)} comments", flush=True)
 
     conn.commit()
     conn.close()

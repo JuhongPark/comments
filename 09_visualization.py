@@ -57,21 +57,24 @@ def main():
         cluster_cls = [classifications[j] for j in indices]
         total = len(cluster_texts)
 
+        classified = [c for c in cluster_cls if c["negative"] is not None and str(c["negative"]).strip() != ""]
+        classified_total = len(classified)
+
         def pct(field):
-            count = sum(1 for c in cluster_cls if str(c[field]).strip().lower() in ("true", "yes", "1"))
-            return count, count * 100 // total if total else 0
+            count = sum(1 for c in classified if str(c[field]).strip().lower() in ("true", "yes", "1"))
+            return count, count * 100 // classified_total if classified_total else 0
 
         neg_c, neg_p = pct("negative")
         ang_c, ang_p = pct("angry")
         spam_c, spam_p = pct("spam")
         resp_c, resp_p = pct("response")
 
-        print(f"\nCluster {i} ({total} comments):")
-        print(f"  Classification breakdown:")
-        print(f"    negative: {neg_c}/{total} ({neg_p}%)")
-        print(f"    angry:    {ang_c}/{total} ({ang_p}%)")
-        print(f"    spam:     {spam_c}/{total} ({spam_p}%)")
-        print(f"    response: {resp_c}/{total} ({resp_p}%)")
+        print(f"\nCluster {i} ({total} comments, {classified_total} classified):")
+        print(f"  Classification breakdown (of {classified_total} classified):")
+        print(f"    negative: {neg_c}/{classified_total} ({neg_p}%)")
+        print(f"    angry:    {ang_c}/{classified_total} ({ang_p}%)")
+        print(f"    spam:     {spam_c}/{classified_total} ({spam_p}%)")
+        print(f"    response: {resp_c}/{classified_total} ({resp_p}%)")
         print(f"  Sample comments:")
         for t in cluster_texts[:5]:
             print(f"    - {t[:120]}")

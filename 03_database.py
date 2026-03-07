@@ -11,9 +11,8 @@ def main():
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    cursor.execute("DROP TABLE IF EXISTS comments")
     cursor.execute("""
-        CREATE TABLE comments (
+        CREATE TABLE IF NOT EXISTS comments (
             cid TEXT PRIMARY KEY,
             text TEXT,
             time TEXT,
@@ -50,7 +49,8 @@ def main():
         ))
 
     conn.commit()
-    print(f"Created {DB_FILE} with {cursor.execute('SELECT COUNT(*) FROM comments').fetchone()[0]} rows")
+    total = cursor.execute('SELECT COUNT(*) FROM comments').fetchone()[0]
+    print(f"{DB_FILE} ready with {total} rows")
     conn.close()
 
 if __name__ == "__main__":

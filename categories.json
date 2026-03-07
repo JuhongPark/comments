@@ -1,28 +1,20 @@
 {
   "categories": [
     {
-      "name": "Ethical Concerns",
-      "description": "Comments about AI safety, alignment, and moral implications"
+      "name": "AI Ethics & Alignment",
+      "description": "Discusses the ethical implications of AI, including alignment, safety, and potential risks."
     },
     {
-      "name": "Technical Discussion",
-      "description": "Comments about AI architecture, capabilities, and limitations"
+      "name": "Technical Deep Dive",
+      "description": "Examines the technical aspects of AI, including hardware, models, and data processing."
     },
     {
-      "name": "Humor",
-      "description": "Jokes and humorous observations about the interview or AI"
+      "name": "Human Experience & Consciousness",
+      "description": "Explores the nature of consciousness, human values, and the potential impact of AI on human lives."
     },
     {
-      "name": "Future Predictions",
-      "description": "Speculation about AI's future impact on society"
-    },
-    {
-      "name": "Praise",
-      "description": "Positive feedback about the interview or participants"
-    },
-    {
-      "name": "Criticism",
-      "description": "Negative feedback or complaints about the content"
+      "name": "Future Predictions & Societal Impact",
+      "description": "Speculates on the future of AI and its potential impact on society, including job displacement, governance, and societal change."
     }
   ]
 }

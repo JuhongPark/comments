@@ -1,3 +1,4 @@
+import json
 import sqlite3
 import numpy as np
 import matplotlib
@@ -9,6 +10,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sentence_transformers import SentenceTransformer
 
 DB_FILE = "comments.db"
+CATEGORIES_FILE = "categories.json"
 N_CLUSTERS = 5
 OUTPUT_IMAGE = "clusters.png"
 
@@ -77,7 +79,13 @@ def main():
     plt.savefig(OUTPUT_IMAGE, dpi=150)
     print(f"Visualization saved to {OUTPUT_IMAGE}")
 
+    with open(CATEGORIES_FILE, "r", encoding="utf-8") as f:
+        step8_categories = json.load(f)["categories"]
+    category_names = [c["name"] for c in step8_categories]
+    category_descriptions = {c["name"]: c["description"] for c in step8_categories}
+
     print("\n=== Cluster Analysis ===")
+    print(f"\nStep 8 categories for alignment check: {', '.join(category_names)}")
     for i in range(N_CLUSTERS):
         indices = [j for j in range(len(texts)) if labels[j] == i]
         cluster_texts = [texts[j] for j in indices]
@@ -97,7 +105,7 @@ def main():
         resp_c, resp_p = pct("response")
 
         print(f"\nCluster {i} - Theme: {cluster_themes[i]} ({total} comments):")
-        print(f"  Classification alignment:")
+        print(f"  Classification alignment (negative/angry/spam/response):")
         print(f"    negative: {neg_c}/{classified_total} ({neg_p}%)")
         print(f"    angry:    {ang_c}/{classified_total} ({ang_p}%)")
         print(f"    spam:     {spam_c}/{classified_total} ({spam_p}%)")
@@ -117,7 +125,7 @@ def main():
             dominant.append("response-needed")
         if not dominant:
             dominant.append("neutral/positive")
-        print(f"  => Dominant categories: {', '.join(dominant)}")
+        print(f"  => Sentiment categories: {', '.join(dominant)}")
 
     print("\n=== Summary: Common Themes & Category Alignment ===")
     print("Q: Are there common themes in the comments?")
@@ -126,14 +134,24 @@ def main():
         indices = [j for j in range(len(texts)) if labels[j] == i]
         print(f"   - Cluster {i} ({len(indices)} comments): keywords [{cluster_themes[i]}]")
     print()
-    print("Q: Do they align with existing categories (positive, negative, angry, spam)?")
-    print("A: Partially. The embedding clusters group comments by *topic* (e.g. praise")
-    print("   for hosts, AI ethics discussions, short reactions/emoji). The LLM classification")
-    print("   categories (negative, angry, spam) cut *across* these topic clusters rather than")
-    print("   mapping 1:1. For example, the 'short reactions' cluster (C2) has the highest")
-    print("   spam rate, while 'host praise' (C1) and 'AI discussion' (C0) clusters differ")
-    print("   mainly in topic, not sentiment. This suggests that content-based clustering and")
-    print("   sentiment-based classification capture complementary dimensions of the data.")
+    print("Q: Do they align with existing categories?")
+    print()
+    print("  1) Step 8 content categories:")
+    for cat in step8_categories:
+        print(f"     - {cat['name']}: {cat['description']}")
+    print()
+    print("  Alignment: The embedding clusters partially align with step 8 categories.")
+    print("  Topic-focused clusters (AI/humanity, GPT/technology) correspond to")
+    print("  'AI Ethics & Alignment', 'Technical Deep Dive', and 'Future Predictions'.")
+    print("  However, clusters also capture social dimensions (host praise, short reactions)")
+    print("  that step 8 categories do not cover, since step 8 focuses on content themes.")
+    print()
+    print("  2) Classification categories (positive, negative, angry, spam):")
+    print("  These sentiment/moderation categories cut *across* topic clusters rather than")
+    print("  mapping 1:1. The 'short reactions' cluster has the highest spam rate, while")
+    print("  topic-focused clusters differ mainly in subject matter, not sentiment.")
+    print("  Content-based clustering and sentiment-based classification capture")
+    print("  complementary dimensions of the data.")
 
 if __name__ == "__main__":
     main()

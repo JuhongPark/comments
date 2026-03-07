@@ -4,9 +4,25 @@ Analyze and moderate YouTube comments using LLM classification and prompt engine
 
 ## Clustering Visualization
 
-Comments are converted to embeddings using a pre-trained sentence model, clustered with K-means (5 clusters), and projected to 2D with t-SNE. Each point is a comment, colored by cluster. Red X marks are cluster centroids.
+Comments are converted to embeddings using `all-MiniLM-L6-v2`, clustered with K-means (5 clusters), and projected to 2D with t-SNE. Each point is a comment, colored by cluster. Red X marks are cluster centroids. Labels show top TF-IDF keywords per cluster.
 
 ![Clustering Visualization](clusters.png)
+
+### Cluster Themes
+
+| Cluster | Size | Keywords | Theme |
+|---------|------|----------|-------|
+| C0 | 368 | ai, like, human | AI and humanity discussions |
+| C1 | 230 | lex, sam, love | Praise for Lex and Sam |
+| C2 | 468 | lol, thanks, thank | Short reactions, emoji, off-topic |
+| C3 | 407 | sam, altman, like | Opinions about Sam Altman |
+| C4 | 670 | people, gpt, like | GPT and technology discussions |
+
+### Analysis
+
+**Are there common themes?** Yes. Embedding-based clustering reveals five distinct thematic groups: AI/humanity discussions (C0), host praise (C1), short reactions and spam (C2), Sam Altman opinions (C3), and GPT/technology discussions (C4).
+
+**Do they align with existing categories (negative, angry, spam)?** Partially. The embedding clusters group comments by *topic*, while LLM classification categories capture *sentiment*. These are complementary dimensions — the 'short reactions' cluster (C2) has the highest spam rate (56%), while topic-focused clusters (C0, C3, C4) differ mainly in subject matter, not sentiment.
 
 ## Video
 [Sam Altman: OpenAI CEO on GPT-4, ChatGPT, and the Future of AI](https://www.youtube.com/watch?v=L_Guz73e6fw)

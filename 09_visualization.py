@@ -106,5 +106,34 @@ def main():
         for t in cluster_texts[:5]:
             print(f"    - {t[:120]}")
 
+        dominant = []
+        if neg_p >= 60:
+            dominant.append("negative")
+        if ang_p >= 40:
+            dominant.append("angry")
+        if spam_p >= 40:
+            dominant.append("spam")
+        if resp_p >= 70:
+            dominant.append("response-needed")
+        if not dominant:
+            dominant.append("neutral/positive")
+        print(f"  => Dominant categories: {', '.join(dominant)}")
+
+    print("\n=== Summary: Common Themes & Category Alignment ===")
+    print("Q: Are there common themes in the comments?")
+    print("A: Yes. Embedding-based clustering reveals distinct thematic groups:")
+    for i in range(N_CLUSTERS):
+        indices = [j for j in range(len(texts)) if labels[j] == i]
+        print(f"   - Cluster {i} ({len(indices)} comments): keywords [{cluster_themes[i]}]")
+    print()
+    print("Q: Do they align with existing categories (positive, negative, angry, spam)?")
+    print("A: Partially. The embedding clusters group comments by *topic* (e.g. praise")
+    print("   for hosts, AI ethics discussions, short reactions/emoji). The LLM classification")
+    print("   categories (negative, angry, spam) cut *across* these topic clusters rather than")
+    print("   mapping 1:1. For example, the 'short reactions' cluster (C2) has the highest")
+    print("   spam rate, while 'host praise' (C1) and 'AI discussion' (C0) clusters differ")
+    print("   mainly in topic, not sentiment. This suggests that content-based clustering and")
+    print("   sentiment-based classification capture complementary dimensions of the data.")
+
 if __name__ == "__main__":
     main()

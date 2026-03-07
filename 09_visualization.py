@@ -5,11 +5,23 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sentence_transformers import SentenceTransformer
 
 DB_FILE = "comments.db"
 N_CLUSTERS = 5
 OUTPUT_IMAGE = "clusters.png"
+
+
+def get_cluster_theme(cluster_texts, all_texts):
+    vectorizer = TfidfVectorizer(max_features=1000, stop_words="english", ngram_range=(1, 2))
+    vectorizer.fit(all_texts)
+    tfidf = vectorizer.transform(cluster_texts)
+    mean_tfidf = tfidf.mean(axis=0).A1
+    top_indices = mean_tfidf.argsort()[-3:][::-1]
+    features = vectorizer.get_feature_names_out()
+    return ", ".join(features[i] for i in top_indices)
+
 
 def main():
     conn = sqlite3.connect(DB_FILE)
@@ -34,12 +46,28 @@ def main():
     tsne = TSNE(n_components=2, random_state=42, perplexity=min(30, len(texts) - 1))
     reduced = tsne.fit_transform(embeddings)
 
-    # Project centroids to 2D by averaging points per cluster
     centroids_2d = np.array([reduced[labels == i].mean(axis=0) for i in range(N_CLUSTERS)])
 
-    plt.figure(figsize=(12, 8))
+    cluster_themes = []
+    for i in range(N_CLUSTERS):
+        cluster_texts = [texts[j] for j in range(len(texts)) if labels[j] == i]
+        theme = get_cluster_theme(cluster_texts, texts)
+        cluster_themes.append(theme)
+
+    plt.figure(figsize=(14, 9))
     scatter = plt.scatter(reduced[:, 0], reduced[:, 1], c=labels, cmap="tab10", alpha=0.6, s=10)
     plt.scatter(centroids_2d[:, 0], centroids_2d[:, 1], c="red", marker="X", s=200, edgecolors="black", label="Centroids")
+
+    for i in range(N_CLUSTERS):
+        plt.annotate(
+            f"C{i}: {cluster_themes[i]}",
+            centroids_2d[i],
+            fontsize=8, fontweight="bold",
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="white", edgecolor="gray", alpha=0.85),
+            ha="center", va="bottom",
+            xytext=(0, 12), textcoords="offset points",
+        )
+
     plt.colorbar(scatter, label="Cluster")
     plt.title("YouTube Comments - K-means Clustering with t-SNE")
     plt.xlabel("t-SNE Dimension 1")
@@ -49,7 +77,6 @@ def main():
     plt.savefig(OUTPUT_IMAGE, dpi=150)
     print(f"Visualization saved to {OUTPUT_IMAGE}")
 
-    # Analyze clusters: themes and alignment with classification categories
     print("\n=== Cluster Analysis ===")
     for i in range(N_CLUSTERS):
         indices = [j for j in range(len(texts)) if labels[j] == i]
@@ -69,8 +96,8 @@ def main():
         spam_c, spam_p = pct("spam")
         resp_c, resp_p = pct("response")
 
-        print(f"\nCluster {i} ({total} comments, {classified_total} classified):")
-        print(f"  Classification breakdown (of {classified_total} classified):")
+        print(f"\nCluster {i} - Theme: {cluster_themes[i]} ({total} comments):")
+        print(f"  Classification alignment:")
         print(f"    negative: {neg_c}/{classified_total} ({neg_p}%)")
         print(f"    angry:    {ang_c}/{classified_total} ({ang_p}%)")
         print(f"    spam:     {spam_c}/{classified_total} ({spam_p}%)")
